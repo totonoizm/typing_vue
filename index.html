@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 
   <title>Vue_typing</title>
 </head>
@@ -15,29 +15,57 @@
       <h1>TypingGAME</h1>
       <div class="marker"></div>
     </div>
-    <button v-if="startflag != true" class="start_btn mb-20" @click="gamestart">Start</button>
-    <div v-if="startflag == true">
-      <div class="question mb-20">Apple</div>
+    <button v-if="start_flag != true" class="start_btn mb-20" @click="gamestart">Start</button><!-- v-ifでスタートフラグ管理 -->
+    <div v-if="start_flag"><!-- v-if  -->
+      <div class="question mb-20">{{ current_question }}</div>
       <div class="clear">Clear!</div>
-      
       <div class="typeform_wrapper mb-20">
-        <input type="text" class="type_form">
+        <input v-model="type_box" type="text" class="type_form">
       </div>
+      <div class="gauge_wrapper mb-20">
+        <div class="gauge"></div>
+      </div>
+      <div class="counter">{{ current_question_counts }}/{{ question_counts }}</div>
     </div>
-    <div class="gauge_wrapper mb-20">
-      <div class="gauge"></div>
-    </div>
-    <div class="counter">1/5    </div>
   </div>
   <script>
     new Vue({
       el:"#app",
       data:{
-        startflag:""
+        start_flag:"",// startした時のフラグ設定
+        current_question:"",
+        questions:[
+          'apple',
+          "Python",
+          "AWScloud",
+          "React.js",
+          "chocolate",
+          "this.function()",
+          "`${template}`",
+          "=>",
+          "<%= form_with model:@gym %>"
+        ],//問題文をVueで定義
+        type_box:"",
+        current_question_counts:0,
+        question_counts:0 //全問題数
       },
-      methods:{
-        gamestart:function(){
-          this.startflag = true;
+      methods:{ 
+        gamestart:function(){ // ここなんだ？
+          this.start_flag = true;
+        }
+      },
+      mounted:function(){ // //描画されたタイミング!methods:の外に出すこと！！！！どうして出すのか？
+          this.current_question = this.questions["0"]
+          this.question_counts = this.questions.length // 残りの問題数を取得
+      },
+      watch:{
+        type_box:function(input){ //input = ユーザー入力値に定義
+          if(input == this.current_question){
+            this.questions.splice(0,1)　//配列を削除　splice()
+            this.current_question = this.questions[0] //次の問題を再定義　元の一番目が上の記述で消えているため、二つ目が入る
+            this.type_box = "" //正解した時点で入力フォームを空にする
+            this.current_question_counts = this.current_question_counts + 1
+          }
         }
       }
     })
