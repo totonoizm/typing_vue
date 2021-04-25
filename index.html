@@ -18,12 +18,12 @@
     <button v-if="start_flag != true" class="start_btn mb-20" @click="gamestart">Start</button><!-- v-ifでスタートフラグ管理 -->
     <div v-if="start_flag"><!-- v-if  -->
       <div class="question mb-20">{{ current_question }}</div>
-      <div class="clear">Clear!</div>
+      <div v-if="current_question_counts == question_counts" class="clear">Clear!</div>
       <div class="typeform_wrapper mb-20">
-        <input v-model="type_box" type="text" class="type_form">
+        <input id="typeform" v-model="type_box" type="text" class="type_form">
       </div>
       <div class="gauge_wrapper mb-20">
-        <div class="gauge"></div>
+        <div v-bind:style="style_object" class="gauge"></div>
       </div>
       <div class="counter">{{ current_question_counts }}/{{ question_counts }}</div>
     </div>
@@ -35,28 +35,46 @@
         start_flag:"",// startした時のフラグ設定
         current_question:"",
         questions:[
-          'apple',
+          "Ruby",
+          "input",
+          "output",
+          "{{}}",
           "Python",
           "AWScloud",
           "React.js",
           "chocolate",
           "this.function()",
-          "`${template}`",
-          "=>",
-          "<%= form_with model:@gym %>"
+          "`${template}`テンプレート構文",
         ],//問題文をVueで定義
         type_box:"",
-        current_question_counts:0,
+        current_question_counts:0, //現在といた問題数
         question_counts:0 //全問題数
       },
-      methods:{ 
+      computed:{ //値をリターンする必要がある ＝ computed
+        style_object:function(){
+          width = 10 * this.current_question_counts + "%" //正解数かける
+          if(this.current_question_counts == 10){
+            color = "#03a9f4"
+          }else{
+            color = "orange"
+          }
+          return{
+            "width" :width,
+            "background-color" :color
+          }
+        }
+      },
+      methods:{
         gamestart:function(){ // ここなんだ？
           this.start_flag = true;
+          this.$nextTick(function(){
+            document.getElementById("typeform").forcus()
+          })
         }
       },
       mounted:function(){ // //描画されたタイミング!methods:の外に出すこと！！！！どうして出すのか？
           this.current_question = this.questions["0"]
-          this.question_counts = this.questions.length // 残りの問題数を取得
+          this.question_counts = this.questions.length // 全問題数を取得
       },
       watch:{
         type_box:function(input){ //input = ユーザー入力値に定義

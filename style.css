@@ -59,9 +59,9 @@ body{
 .typeform_wrapper{
   border-bottom: 1px solid gray;
 }
-
 .gauge{
   height: 20px;
+  transition: all .5s ease;
 }
 
 .gauge_wrapper{
