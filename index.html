@@ -10,22 +10,37 @@
   <title>Vue_typing</title>
 </head>
 <body>
-  <div class="container">
+  <div id="app" class="container">
     <div class="title">
       <h1>TypingGAME</h1>
       <div class="marker"></div>
     </div>
-    <button class="start_btn mb-20">Start</button>
-    <div class="question mb-20">Apple</div>
-    <div class="clear">Clear!</div>
-
-    <div class="typeform_wrapper mb-20">
-      <input type="text" class="type_form">
+    <button v-if="startflag != true" class="start_btn mb-20" @click="gamestart">Start</button>
+    <div v-if="startflag == true">
+      <div class="question mb-20">Apple</div>
+      <div class="clear">Clear!</div>
+      
+      <div class="typeform_wrapper mb-20">
+        <input type="text" class="type_form">
+      </div>
     </div>
     <div class="gauge_wrapper mb-20">
       <div class="gauge"></div>
     </div>
     <div class="counter">1/5    </div>
   </div>
+  <script>
+    new Vue({
+      el:"#app",
+      data:{
+        startflag:""
+      },
+      methods:{
+        gamestart:function(){
+          this.startflag = true;
+        }
+      }
+    })
+  </script>
 </body>
 </html>
