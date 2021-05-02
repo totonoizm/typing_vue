@@ -12,7 +12,7 @@
 <body>
   <div id="app" class="container">
     <div class="title">
-      <h1>TypingGAME</h1>
+      <h1 :class="{ red: isActive, 'bg-blue': !isActive }">TypingGAME</h1>
       <div class="marker"></div>
     </div>
     <button v-if="start_flag != true" class="start_btn mb-20" @click="gamestart">Start</button><!-- v-ifでスタートフラグ管理 -->
@@ -27,11 +27,14 @@
       </div>
       <div class="counter">{{ current_question_counts }}/{{ question_counts }}</div>
     </div>
+    <button @click="isActive = !isActive">タイトルのいろ切り替え</button>
+
   </div>
   <script>
     new Vue({
       el:"#app",
       data:{
+        isActive: true,
         start_flag:"",// startした時のフラグ設定
         current_question:"",
         questions:[
@@ -67,7 +70,7 @@
       methods:{
         gamestart:function(){ // ここなんだ？
           this.start_flag = true;
-          this.$nextTick(function(){
+          this.nextTick(function(){
             document.getElementById("typeform").forcus()
           })
         }
@@ -79,7 +82,7 @@
       watch:{
         type_box:function(input){ //input = ユーザー入力値に定義
           if(input == this.current_question){
-            this.questions.splice(0,1)　//配列を削除　splice()
+            this.questions.splice(0,1)//配列を削除 splice()
             this.current_question = this.questions[0] //次の問題を再定義　元の一番目が上の記述で消えているため、二つ目が入る
             this.type_box = "" //正解した時点で入力フォームを空にする
             this.current_question_counts = this.current_question_counts + 1
